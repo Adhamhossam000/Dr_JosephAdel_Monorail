@@ -573,13 +573,13 @@
     const initialCards = [
       { id: 'Fe', label: 'Fe', name: 'Iron' },
       { id: 'FeO', label: 'FeO', name: 'Iron II Oxide' },
-      { id: 'Fe3O4', label: 'Fe₃O₄', name: 'Magnetite' },
       { id: 'Fe2O3', label: 'Fe₂O₃', name: 'Hematite' },
+      { id: 'Fe3O4', label: 'Fe₃O₄', name: 'Magnetite' },
       { id: 'FeCO3', label: 'FeCO₃', name: 'Siderite' },
       { id: 'O2', label: 'O₂', name: 'Oxygen' },
+      { id: 'H2O', label: 'H2O', name: 'ًWater Vapour' },
       { id: 'H2', label: 'H₂', name: 'Hydrogen' },
       { id: 'CO', label: 'CO', name: 'Carbon monoxide' },
-      { id: 'H2O', label: 'H2O', name: 'ًWater Vapour' },
       { id: '200C', label: '200°C', name: '200°C' },
       { id: '500C', label: '500°C', name: '500°C' },
       { id: '1200C', label: '1200°C', name: '1200°C' },
@@ -587,12 +587,13 @@
 
     const reactions = [
       { reactants: ['Fe','O2'], product: 'Fe3O4', temps: [] },
-      { reactants: ['Fe','H2O'], product: 'Fe3O4', temps: [] },
       { reactants: ['FeO','O2'], product: 'Fe2O3', temps: [] },
-      { reactants: ['FeO','Fe2O3'], product: 'Fe3O4', temps: [] },
+      { reactants: ['Fe3O4','O2'], product: 'Fe2O3', temps: [] },
+      { reactants: ['Fe','H2O'], product: 'Fe3O4', temps: [] },
+      { reactants: ['FeO','H2O'], product: 'Fe2O3', temps: [] },
+      { reactants: ['Fe3O4','H2O'], product: 'Fe2O3', temps: [] },
       { reactants: ['Fe2O3','CO'], product: 'Fe3O4', temps: ['200C'] },
       { reactants: ['Fe2O3','CO'], product: 'FeO', temps: ['500C'] },
-      { reactants: ['Fe2O3','CO'], product: 'Fe3O4', temps: ['200C'] },
       { reactants: ['FeO','CO'], product: 'Fe', temps: ['1200C'] },
       { reactants: ['Fe2O3','CO'], product: 'Fe', temps: ['1200C'] },
       { reactants: ['Fe3O4','CO'], product: 'Fe', temps: ['1200C'] },
@@ -601,8 +602,7 @@
       { reactants: ['FeO','H2'], product: 'Fe', temps: ['1200C'] },
       { reactants: ['Fe2O3','H2'], product: 'Fe', temps: ['1200C'] },
       { reactants: ['Fe3O4','H2'], product: 'Fe', temps: ['1200C'] },
-      { reactants: ['FeCO3'], product: 'FeO', temps: ['1200C','500C'] },
-      { reactants: ['Fe3O4','O2'], product: 'Fe2O3', temps: [] }
+      { reactants: ['FeCO3'], product: 'FeO', temps: ['500C'] },
     ];
 
     const board = document.getElementById('board');
@@ -893,4 +893,3 @@
   </script>
 </body>
 </html>
-
