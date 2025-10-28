@@ -1,0 +1,894 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dr Joseph Adel Monorail ⚗️</title>
+  <link rel="icon" type="image/png" href="flask.png">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#131314; --card:#1b1b1c; --muted:#9aa0a6; --accent:#6633ee; --success:#6be86b; --danger:#ff6b6b; --glass:rgba(255,255,255,0.02); --radius:14px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:'Montserrat',sans-serif;background:#000;color:#e9e9ea;overflow-x:hidden;position:relative}
+    
+    body::before{
+      content:'';
+      position:fixed;
+      top:0;
+      left:0;
+      right:0;
+      bottom:0;
+      background:linear-gradient(to right, #4f4f4f2e 1px, transparent 1px), linear-gradient(to bottom, #8080800a 1px, transparent 1px);
+      background-size:14px 24px;
+      z-index:0;
+      pointer-events:none;
+    }
+    
+    body::after{
+      content:'';
+      position:fixed;
+      left:50%;
+      top:-10%;
+      transform:translateX(-50%);
+      height:1000px;
+      width:1000px;
+      border-radius:50%;
+      background:radial-gradient(circle 400px at 50% 300px, rgba(102,51,238,0.25), #000);
+      z-index:0;
+      pointer-events:none;
+    }
+    
+    .particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1}
+    .particle{position:absolute;width:3px;height:3px;background:rgba(102,51,238,0.2);border-radius:50%;animation:float 20s infinite ease-in-out}
+    @keyframes float{0%,100%{transform:translateY(0) translateX(0);opacity:0.2}50%{transform:translateY(-100vh) translateX(50px);opacity:0.6}}
+    .particle:nth-child(2){left:20%;animation-delay:2s;animation-duration:25s}
+    .particle:nth-child(3){left:40%;animation-delay:5s;animation-duration:22s}
+    .particle:nth-child(4){left:60%;animation-delay:3s;animation-duration:27s}
+    .particle:nth-child(5){left:80%;animation-delay:7s;animation-duration:23s}
+    
+    .wrap{max-width:1300px;margin:40px auto;padding:0 24px;position:relative;z-index:10}
+    
+    header{
+      background:linear-gradient(135deg, rgba(30,30,32,0.9) 0%, rgba(15,15,16,0.95) 100%);
+      border:1px solid rgba(255,255,255,0.08);
+      border-radius:20px;
+      padding:32px 36px;
+      backdrop-filter:blur(10px);
+      box-shadow:0 20px 60px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:20px;
+      margin-bottom:40px;
+      position:relative;
+      overflow:hidden;
+    }
+    
+    header::before{
+      content:'';
+      position:absolute;
+      top:-50%;
+      right:-50%;
+      width:200%;
+      height:200%;
+      background:radial-gradient(circle, rgba(100,100,100,0.03) 0%, transparent 70%);
+      animation:pulse 8s ease-in-out infinite;
+    }
+    
+    @keyframes pulse{0%,100%{transform:scale(1);opacity:0.5}50%{transform:scale(1.1);opacity:0.8}}
+    
+    h1{
+      font-size:28px;
+      margin:0;
+      font-weight:800;
+      color:#ffffff !important;
+      position:relative;
+      z-index:1;
+      text-shadow:0 2px 8px rgba(0,0,0,0.5);
+    }
+    
+    .lead{
+      color:var(--muted);
+      font-size:14px;
+      margin-top:8px;
+      line-height:1.6;
+      position:relative;
+      z-index:1;
+    }
+
+    #board{
+      display:grid;
+      grid-template-columns:repeat(auto-fill, minmax(160px, 1fr));
+      gap:20px;
+      margin-top:20px;
+      perspective:1000px;
+    }
+    
+    .card{
+      background:linear-gradient(135deg, rgba(27,27,28,0.9) 0%, rgba(19,19,20,0.9) 100%);
+      border-radius:16px;
+      padding:24px 18px;
+      text-align:center;
+      border:1px solid rgba(255,255,255,0.06);
+      cursor:pointer;
+      box-shadow:0 10px 30px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.03);
+      transition:all .35s cubic-bezier(.4,0,.2,1);
+      position:relative;
+      overflow:hidden;
+      transform-style:preserve-3d;
+    }
+    
+    .card::before{
+      content:'';
+      position:absolute;
+      top:0;
+      left:0;
+      right:0;
+      bottom:0;
+      background:linear-gradient(135deg, rgba(102,51,238,0.0) 0%, rgba(102,51,238,0.08) 100%);
+      opacity:0;
+      transition:opacity .35s;
+    }
+    
+    .card:hover::before{opacity:1}
+    
+    .card.small{
+      grid-column:span 1;
+      padding:16px 12px;
+    }
+    
+    .card:hover{
+      transform:translateY(-12px) rotateX(5deg);
+      box-shadow:0 20px 50px rgba(0,0,0,0.6), 0 0 30px rgba(102,51,238,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+      border-color:rgba(102,51,238,0.4);
+    }
+    
+    .card.selected{
+      background:linear-gradient(135deg, rgba(102,51,238,0.2) 0%, rgba(102,51,238,0.1) 100%);
+      outline:2px solid rgba(102,51,238,0.6);
+      outline-offset:3px;
+      box-shadow:0 25px 60px rgba(102,51,238,0.3), 0 0 40px rgba(102,51,238,0.4), inset 0 1px 0 rgba(255,255,255,0.15);
+      transform:translateY(-8px) scale(1.02);
+    }
+    
+    .formula{
+      font-weight:800;
+      font-size:1.35rem;
+      text-shadow:0 2px 8px rgba(0,0,0,0.3);
+      position:relative;
+      z-index:1;
+    }
+    
+    .meta{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:8px;
+      position:relative;
+      z-index:1;
+      font-weight:500;
+    }
+
+    .reaction-area{
+      height:280px;
+      border-radius:20px;
+      margin:40px 0;
+      position:relative;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:visible;
+      background:linear-gradient(135deg, rgba(30,30,32,0.9) 0%, rgba(15,15,16,0.95) 100%);
+      border:2px dashed rgba(255,255,255,0.15);
+      backdrop-filter:blur(5px);
+    }
+    
+    .reaction-area::after{
+      content:'⚗️ Reaction Zone';
+      position:absolute;
+      top:20px;
+      left:50%;
+      transform:translateX(-50%);
+      font-size:13px;
+      color:rgba(255,255,255,0.4);
+      font-weight:600;
+      letter-spacing:1px;
+      text-transform:uppercase;
+    }
+    
+    .product{
+      position:relative;
+      min-width:240px;
+      max-width:90%;
+      padding:28px;
+      border-radius:18px;
+      text-align:center;
+      background:linear-gradient(135deg, rgba(102,51,238,0.15) 0%, rgba(102,51,238,0.08) 100%);
+      border:2px solid rgba(102,51,238,0.5);
+      box-shadow:0 30px 80px rgba(0,0,0,0.7), 0 0 50px rgba(102,51,238,0.4), inset 0 2px 0 rgba(255,255,255,0.1);
+      transform:scale(.85);
+      opacity:0;
+      backdrop-filter:blur(10px);
+      margin:auto;
+    }
+    
+    .product.show{animation:popIn .7s cubic-bezier(.34,1.56,.64,1) forwards}
+    .product.hide{animation:popOut .4s cubic-bezier(.4,0,.2,1) forwards}
+    
+    @keyframes popIn{
+      0%{opacity:0;transform:scale(.85) rotateY(-180deg)}
+      60%{transform:scale(1.08) rotateY(10deg)}
+      100%{opacity:1;transform:scale(1) rotateY(0deg);filter:drop-shadow(0 15px 40px rgba(102,51,238,0.35))}
+    }
+    
+    @keyframes popOut{
+      0%{opacity:1;transform:scale(1)}
+      100%{opacity:0;transform:scale(.75) translateY(20px)}
+    }
+
+    .move{
+      position:absolute;
+      z-index:2000;
+      will-change:transform,opacity;
+      filter:drop-shadow(0 5px 15px rgba(102,51,238,0.4));
+    }
+
+    .controls{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      position:relative;
+      z-index:1;
+    }
+    
+    .btn{
+      background:rgba(255,255,255,0.03);
+      border:1px solid rgba(255,255,255,0.1);
+      padding:10px 20px;
+      border-radius:12px;
+      color:inherit;
+      cursor:pointer;
+      font-weight:600;
+      transition:all .3s cubic-bezier(.4,0,.2,1);
+      backdrop-filter:blur(10px);
+      font-size:13px;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+    }
+    
+    .btn:hover{
+      background:rgba(102,51,238,0.2);
+      border-color:rgba(102,51,238,0.5);
+      transform:translateY(-2px);
+      box-shadow:0 8px 20px rgba(102,51,238,0.3);
+    }
+    
+    .btn:active{transform:translateY(0)}
+    
+    .log{
+      background:rgba(255,255,255,0.02);
+      border:1px solid rgba(255,255,255,0.05);
+      border-radius:14px;
+      padding:18px 24px;
+      color:var(--muted);
+      font-size:14px;
+      margin-top:20px;
+      backdrop-filter:blur(10px);
+      box-shadow:inset 0 2px 8px rgba(0,0,0,0.2);
+      font-weight:500;
+    }
+    
+    #selectedList{
+      color:#e9e9ea;
+      font-weight:700;
+      margin-left:8px;
+    }
+
+    footer{
+      position:fixed;
+      bottom:20px;
+      right:20px;
+      font-size:13px;
+      color:var(--muted);
+      z-index:100;
+      background:rgba(27,27,28,0.8);
+      padding:10px 18px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.08);
+      backdrop-filter:blur(10px);
+      box-shadow:0 4px 12px rgba(0,0,0,0.3);
+      transition:all .3s;
+    }
+    
+    footer:hover{
+      background:rgba(27,27,28,0.95);
+      transform:translateY(-2px);
+      box-shadow:0 6px 20px rgba(0,0,0,0.4);
+    }
+    
+    footer a{
+      color:var(--accent);
+      text-decoration:none;
+      font-weight:600;
+      transition:color .3s;
+    }
+    
+    footer a:hover{
+      color:#8855ff;
+    }
+
+    @media (max-width:820px){
+      #board{grid-template-columns:repeat(auto-fill, minmax(130px, 1fr));gap:16px}
+      .reaction-area{height:200px}
+      h1{font-size:22px}
+      header{padding:24px;flex-direction:column;text-align:center}
+      footer{font-size:11px;padding:12px 16px}
+      #welcomeScreen h1{font-size:2.5rem}
+      .welcome-subtitle{font-size:1rem}
+      .welcome-icon{font-size:3rem}
+    }
+
+    #welcomeScreen {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #000;
+      color: white;
+      font-family: 'Space Grotesk', sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 99999;
+      opacity: 1;
+      transition: opacity 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+    }
+    
+    #welcomeScreen::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 30% 50%, rgba(102, 51, 238, 0.15) 0%, transparent 50%),
+                  radial-gradient(circle at 70% 50%, rgba(102, 51, 238, 0.1) 0%, transparent 50%);
+      animation: welcomeGradient 8s ease-in-out infinite;
+    }
+    
+    #welcomeScreen::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        radial-gradient(2px 2px at 20% 30%, rgba(102, 51, 238, 0.3), transparent),
+        radial-gradient(2px 2px at 60% 70%, rgba(102, 51, 238, 0.3), transparent),
+        radial-gradient(1px 1px at 50% 50%, rgba(102, 51, 238, 0.2), transparent),
+        radial-gradient(1px 1px at 80% 10%, rgba(102, 51, 238, 0.3), transparent),
+        radial-gradient(2px 2px at 90% 60%, rgba(102, 51, 238, 0.2), transparent),
+        radial-gradient(1px 1px at 33% 85%, rgba(102, 51, 238, 0.3), transparent),
+        radial-gradient(1px 1px at 15% 60%, rgba(102, 51, 238, 0.2), transparent);
+      background-size: 200% 200%;
+      animation: welcomeParticles 20s linear infinite;
+      opacity: 0.6;
+    }
+    
+    @keyframes welcomeGradient {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      33% { transform: translate(5%, 5%) rotate(120deg); }
+      66% { transform: translate(-5%, 5%) rotate(240deg); }
+    }
+    
+    @keyframes welcomeParticles {
+      0% { background-position: 0% 0%; }
+      100% { background-position: 100% 100%; }
+    }
+    
+#welcomeScreen.fadeOut {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(1.1);
+  transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+}
+
+    
+    .welcome-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 800px;
+      padding: 0 24px;
+    }
+    
+    .welcome-icon {
+      font-size: 4rem;
+      margin-bottom: 2rem;
+      animation: welcomeIconFloat 3s ease-in-out infinite, welcomeIconAppear 1s ease forwards;
+      opacity: 0;
+      filter: drop-shadow(0 0 30px rgba(102, 51, 238, 0.5));
+    }
+    
+    @keyframes welcomeIconFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+    }
+    
+    @keyframes welcomeIconAppear {
+      0% { opacity: 0; transform: scale(0.5) translateY(-30px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    
+    #welcomeScreen h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      color: #ffffff;
+      font-size: 3.5rem;
+      margin: 0 0 1rem 0;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      animation: welcomeTitleSlide 1s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s forwards;
+      opacity: 0;
+      background: linear-gradient(135deg, #ffffff 0%, rgba(255, 255, 255, 0.7) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .welcome-subtitle {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 400;
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.6);
+      margin-bottom: 3rem;
+      line-height: 1.6;
+      animation: welcomeSubtitleSlide 1s cubic-bezier(0.34, 1.56, 0.64, 1) 0.4s forwards;
+      opacity: 0;
+    }
+    
+    @keyframes welcomeTitleSlide {
+      0% { opacity: 0; transform: translateY(30px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes welcomeSubtitleSlide {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    
+    #welcomeScreen button {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      padding: 1rem 3rem;
+      border: 2px solid rgba(102, 51, 238, 0.5);
+      background: rgba(102, 51, 238, 0.1);
+      color: white;
+      cursor: pointer;
+      border-radius: 50px;
+      animation: welcomeButtonAppear 1s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s forwards;
+      opacity: 0;
+      position: relative;
+      overflow: hidden;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 32px rgba(102, 51, 238, 0.2);
+    }
+    
+    #welcomeScreen button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(102, 51, 238, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+    
+    #welcomeScreen button:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+    
+    #welcomeScreen button:hover {
+      background: rgba(102, 51, 238, 0.25);
+      border-color: rgba(102, 51, 238, 0.8);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 48px rgba(102, 51, 238, 0.4);
+    }
+    
+    #welcomeScreen button:active {
+      transform: translateY(-1px);
+    }
+    
+    #welcomeScreen button span {
+      position: relative;
+      z-index: 1;
+    }
+    
+    @keyframes welcomeButtonAppear {
+      0% { opacity: 0; transform: translateY(20px) scale(0.9); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <div id="welcomeScreen" role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+    <div class="welcome-content">
+      <div class="welcome-icon">⚗️</div>
+      <h1 id="welcomeTitle">Dr Joseph Adel Monorail</h1>
+      <p class="welcome-subtitle">Explore the fascinating world of chemical reactions<br>through interactive visualization</p>
+      <button id="continueBtn"><span>Begin Experience</span></button>
+    </div>
+  </div>
+
+  <div class="particles">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Dr Joseph Adel Monorail ⚗️</h1>
+        <div class="lead">Select reactant cards to combine them. Include temperature cards when required.</div>
+      </div>
+      <div class="controls">
+        <button id="clearBtn" class="btn">Clear</button>
+      </div>
+    </header>
+
+    <section id="board" aria-label="chemical-cards"></section>
+
+    <section class="reaction-area" id="reactionArea" aria-hidden="true">
+      <div id="productBox" class="product" aria-live="polite"></div>
+    </section>
+
+    <div class="log" id="log">Selected: <span id="selectedList">—</span></div>
+  </div>
+
+  <footer>
+    Built by <a href="https://adhamhossam.netlify.app" target="_blank" rel="noopener noreferrer">Adham Hossam</a>
+  </footer>
+
+  <script>
+    const welcomeScreen = document.getElementById('welcomeScreen');
+    const continueBtn = document.getElementById('continueBtn');
+
+    const initialCards = [
+      { id: 'Fe', label: 'Fe', name: 'Iron' },
+      { id: 'FeO', label: 'FeO', name: 'Iron II Oxide' },
+      { id: 'O2', label: 'O₂', name: 'Oxygen' },
+      { id: 'Fe2O3', label: 'Fe₂O₃', name: 'Hematite' },
+      { id: 'Fe3O4', label: 'Fe₃O₄', name: 'Magnetite' },
+      { id: 'FeCO3', label: 'FeCO₃', name: 'Siderite' },
+      { id: 'CO', label: 'CO', name: 'Carbon monoxide' },
+      { id: 'H2', label: 'H₂', name: 'Hydrogen' },
+      { id: 'CO2', label: 'CO₂', name: 'Carbon dioxide' },
+      { id: '200C', label: '200°C', name: '200°C' },
+      { id: '500C', label: '500°C', name: '500°C' },
+      { id: '1200C', label: '1200°C', name: '1200°C' }
+    ];
+
+    const reactions = [
+      { reactants: ['Fe','O2'], product: 'Fe3O4', temps: [] },
+      { reactants: ['FeO','O2'], product: 'Fe2O3', temps: [] },
+      { reactants: ['FeO','Fe2O3'], product: 'Fe3O4', temps: [] },
+      { reactants: ['Fe2O3','CO'], product: 'Fe3O4', temps: ['200C'] },
+      { reactants: ['Fe2O3','CO'], product: 'FeO', temps: ['500C'] },
+      { reactants: ['FeO','CO'], product: 'Fe', temps: ['1200C'] },
+      { reactants: ['Fe2O3','CO'], product: 'Fe', temps: ['1200C'] },
+      { reactants: ['Fe3O4','CO'], product: 'Fe', temps: ['1200C'] },
+      { reactants: ['Fe2O3','H2'], product: 'Fe3O4', temps: ['500C'] },
+      { reactants: ['Fe3O4','CO'], product: 'FeO', temps: ['500C'] },
+      { reactants: ['FeO','H2'], product: 'Fe', temps: ['1200C'] },
+      { reactants: ['Fe2O3','H2'], product: 'Fe', temps: ['1200C'] },
+      { reactants: ['Fe3O4','H2'], product: 'Fe', temps: ['1200C'] },
+      { reactants: ['FeCO3'], product: 'FeO', temps: ['1200C','500C'] },
+      { reactants: ['FeO','CO2'], product: 'FeCO3', temps: ['200C'] },
+      { reactants: ['Fe3O4','O2'], product: 'Fe2O3', temps: [] }
+    ];
+
+    const board = document.getElementById('board');
+    const reactionArea = document.getElementById('reactionArea');
+    const productBox = document.getElementById('productBox');
+    const selectedList = document.getElementById('selectedList');
+    const clearBtn = document.getElementById('clearBtn');
+    const logEl = document.getElementById('log');
+
+    let cards = [];
+    let selected = [];
+
+    const selectSound = new Audio('mouse.mp3');
+    const resultSound = new Audio('whoosh.mp3');
+    const clearSound = new Audio('writing.mp3');
+    const bgMusic = new Audio('deepspaceloop.mp3');
+    
+    selectSound.preload = 'auto';
+    resultSound.preload = 'auto';
+    clearSound.preload = 'auto';
+    bgMusic.preload = 'auto';
+    
+    selectSound.volume = 0.1;
+    resultSound.volume = 0.3;
+    clearSound.volume = 0.4;
+    bgMusic.volume = 0.6;
+    bgMusic.loop = true;
+    
+    let musicStarted = false;
+    
+    continueBtn.addEventListener('click', () => {
+      bgMusic.play().then(() => {
+        console.log('Background music started');
+        musicStarted = true;
+      }).catch(err => console.log('Background music play failed:', err));
+      
+      welcomeScreen.classList.add('fadeOut');
+      setTimeout(() => {
+        welcomeScreen.style.display = 'none';
+      }, 1200);
+    });
+    
+    function playSound(sound) {
+      sound.currentTime = 0;
+      sound.play().catch(err => console.log('Audio play failed:', err));
+    }
+
+    function renderBoard(){
+      board.innerHTML = '';
+      cards.forEach(cd => {
+        const el = document.createElement('div');
+        el.className = 'card' + (isTemp(cd.id) ? ' small' : '');
+        el.dataset.id = cd.id;
+        el.innerHTML = `<div class="formula">${cd.label}</div><div class="meta">${cd.name || ''}</div>`;
+        el.addEventListener('click', ()=>toggleSelect(el));
+        board.appendChild(el);
+      });
+    }
+
+    function isTemp(id){ return id.endsWith('C'); }
+
+    function toggleSelect(el){
+      const id = el.dataset.id;
+      
+      if(productBox.classList.contains('show')){
+        productBox.classList.remove('show');
+        productBox.classList.add('hide');
+        setTimeout(() => {
+          productBox.innerHTML = '';
+          productBox.classList.remove('hide');
+        }, 400);
+      }
+      
+      if(selected.includes(id)){
+        selected = selected.filter(s=>s!==id);
+        el.classList.remove('selected');
+      } else {
+        selected.push(id);
+        el.classList.add('selected');
+      }
+      
+      playSound(selectSound);
+      updateSelectedUI();
+      checkReactions();
+    }
+    function updateSelectedUI(){
+      selectedList.textContent = selected.length ? selected.join(' + ') : '—';
+    }
+
+    clearBtn.addEventListener('click', ()=>{
+      clearSelection();
+    });
+
+    function clearSelection(){
+      selected = [];
+      document.querySelectorAll('.card.selected').forEach(c=>c.classList.remove('selected'));
+      updateSelectedUI();
+      
+      // Play clear sound
+      playSound(clearSound);
+      
+      // Fade out the product box when Clear button is clicked
+      if(productBox.classList.contains('show')){
+        productBox.classList.remove('show');
+        productBox.classList.add('hide');
+        setTimeout(() => {
+          productBox.innerHTML = '';
+          productBox.classList.remove('hide');
+        }, 400);
+      }
+    }
+
+    // returns true if reaction matched and started
+    function checkReactions(){
+      if(selected.length < 1) return false;
+
+      // separate reactants and temps from selection
+      const selectedReactants = selected.filter(s => !isTemp(s));
+      const selectedTemps = selected.filter(s => isTemp(s));
+
+      // try to find reaction where all required reactants are present
+      for(const r of reactions){
+        const need = r.reactants;
+        
+        // check if all required reactants are selected
+        const hasAll = need.every(n => selectedReactants.includes(n));
+        if(!hasAll) continue;
+
+        // check if exactly these reactants (no extras, unless temp cards)
+        if(selectedReactants.length !== need.length) continue;
+
+        // check temperature requirement
+        const requiresTemp = r.temps && r.temps.length > 0;
+        let tempOk = true;
+        
+        if(requiresTemp){
+          // must have at least one of the allowed temps
+          tempOk = selectedTemps.some(s => r.temps.includes(s));
+        } else {
+          // if reaction doesn't require temp, it's ok to have temps but not required
+          tempOk = true;
+        }
+
+        if(hasAll && tempOk){
+          runReaction(r);
+          return true;
+        }
+      }
+      return false;
+    }
+
+    // animation routine
+    async function runReaction(r){
+      const reactants = r.reactants;
+      const reactEls = reactants.map(id => document.querySelector(`.card[data-id='${id}']`)).filter(Boolean);
+      if(reactEls.length===0) return;
+
+      // clone and animate
+      const clones = reactEls.map(el=>makeClone(el));
+
+      // target center
+      const areaRect = reactionArea.getBoundingClientRect();
+      const centerX = areaRect.left + areaRect.width/2 + window.scrollX;
+      const centerY = areaRect.top + areaRect.height/2 + window.scrollY;
+
+      // move clones staggered
+      for(let i=0;i<clones.length;i++){
+        const c = clones[i];
+        await moveToCenter(c, centerX, centerY, 220 + i*80);
+      }
+
+      // merge pulse
+      await wait(220);
+      clones.forEach(c=>{ c.style.transition = 'transform .4s ease, opacity .35s'; c.style.transform += ' scale(.45)'; c.style.opacity = '0'; });
+      setTimeout(()=>clones.forEach(c=>c.remove()),450);
+
+      // produce product
+      const productId = r.product;
+      const data = cards.find(cd=>cd.id===productId) || initialCards.find(ic=>ic.id===productId) || {id:productId,label:productId,name:''};
+
+      // if product not on board, add it (appears after animation)
+      let productEl = document.querySelector(`.card[data-id='${productId}']`);
+      if(!productEl){
+        addCardToBoard(data);
+        renderBoard();
+        // find the new element
+        productEl = document.querySelector(`.card[data-id='${productId}']`);
+      }
+
+      // show productBox in reaction area
+      productBox.innerHTML = `<div style="font-weight:800;font-size:1.4rem;text-shadow:0 2px 10px rgba(0,0,0,0.3)">${data.label}</div><div style="color:var(--muted);margin-top:10px;font-weight:600">${data.name||''}</div>`;
+      productBox.classList.remove('show');
+      requestAnimationFrame(()=>productBox.classList.add('show'));
+      
+      // Play result sound
+      playSound(resultSound);
+
+      // highlight product on board briefly
+      if(productEl){
+        productEl.classList.add('selected');
+        setTimeout(()=>productEl.classList.remove('selected'),1200);
+      }
+
+      // clear selection after reaction (but keep product box visible)
+      setTimeout(()=>{
+        selected = [];
+        document.querySelectorAll('.card.selected').forEach(c=>c.classList.remove('selected'));
+        updateSelectedUI();
+      },800);
+
+      // format log message with temperature if applicable
+      const tempCards = selected.filter(s=>isTemp(s));
+      const tempStr = tempCards.length ? ` (at ${tempCards.join(', ')})` : '';
+      log(`✨ Reaction: ${reactants.join(' + ')}${tempStr} → ${data.label}`);
+    }
+
+    // utils: create clone element positioned over original
+    function makeClone(el){
+      const rect = el.getBoundingClientRect();
+      const c = el.cloneNode(true);
+      c.classList.add('move');
+      c.style.left = (rect.left + window.scrollX) + 'px';
+      c.style.top = (rect.top + window.scrollY) + 'px';
+      c.style.width = rect.width + 'px';
+      c.style.height = rect.height + 'px';
+      c.style.margin = '0';
+      c.style.transform = 'none';
+      c.style.opacity = '1';
+      document.body.appendChild(c);
+      return c;
+    }
+
+    function moveToCenter(el, centerX, centerY, duration=300){
+      return new Promise(res=>{
+        const rect = el.getBoundingClientRect();
+        const curX = rect.left + rect.width/2 + window.scrollX;
+        const curY = rect.top + rect.height/2 + window.scrollY;
+        const dx = centerX - curX;
+        const dy = centerY - curY;
+        el.style.transition = `transform ${duration}ms cubic-bezier(.2,.9,.3,1), opacity ${duration/1.8}ms`;
+        el.style.transform = `translate(${dx}px, ${dy}px) scale(.9)`;
+        setTimeout(res,duration+30);
+      });
+    }
+
+    function addCardToBoard(data){
+      // avoid duplicates
+      if(cards.some(c=>c.id===data.id)) return;
+      cards.push(data);
+    }
+
+    function log(text){
+      logEl.textContent = text;
+      setTimeout(()=>{
+        logEl.textContent = 'Selected: ' + (selected.length? selected.join(' + '): '—');
+      },3500);
+    }
+
+    function wait(ms){return new Promise(r=>setTimeout(r,ms));}
+
+    // --- init ---
+    function init(){
+      cards = initialCards.slice();
+      selected = [];
+      renderBoard();
+      updateSelectedUI();
+      productBox.classList.remove('show'); productBox.innerHTML = '';
+      log('🧪 Ready — click cards to create reactions!');
+    }
+
+    // expose product clicks to allow further reaction (products are normal cards so clickable)
+    init();
+
+    // Accessibility: allow keyboard selection (Enter) on focused cards
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape') clearSelection();
+      if(e.key === 'Enter' && document.activeElement && document.activeElement.classList.contains('card')){
+        document.activeElement.click();
+      }
+    });
+
+    // make cards focusable for keyboard
+    const observer = new MutationObserver(()=>{
+      document.querySelectorAll('.card').forEach(c=>{ c.tabIndex = 0; });
+    });
+    observer.observe(board,{childList:true,subtree:true});
+
+  </script>
+</body>
+</html>
